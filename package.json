@@ -1,7 +1,9 @@
 {
+  "homepage": "https:AchillesGuo888.github.io/LIBRARY-SYSTEM-FRONTEND",
   "name": "library-system-frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -9,6 +11,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.8.1",
     "cross-spawn": "^7.0.6",
+    "jwt-decode": "^4.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.2.0",
@@ -19,7 +22,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [

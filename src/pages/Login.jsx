@@ -31,7 +31,9 @@ const Login = () => {
       });
 
       console.log('Login successful:', response.data);
-      localStorage.setItem('authToken', response.data.token);
+      localStorage.setItem('authToken', response.data.data.accessToken);
+      localStorage.setItem('userName', response.data.data.userName);
+ 
       navigate('/');
 
     } catch (err) {

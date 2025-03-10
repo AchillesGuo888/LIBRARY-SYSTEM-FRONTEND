@@ -1,80 +1,133 @@
-/* 全局样式 */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* 页面容器 */
 .home-container {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
-/* 导航栏 */
+.header {
+  background-color: #3498db;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
 .navbar {
+  background-color: #2c3e50;
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: #2c3e50;
-  color: white;
-}
-
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: white;
-  text-decoration: none;
 }
 
 .nav-links {
   display: flex;
-  gap: 1rem;
+  gap: 20px;
+  align-items: center;
 }
 
 .nav-links a {
   color: white;
   text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+  font-weight: bold;
 }
 
 .nav-links a:hover {
-  background-color: #34495e;
+  text-decoration: underline;
 }
 
-/* 主内容区域 */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.auth-link {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+.user-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.user-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #3498db;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.user-icon:hover {
+  transform: scale(1.1);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 1000;
+  min-width: 180px;
+}
+
+.dropdown-menu button {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.2s;
+}
+
+.dropdown-menu button:hover {
+  background: #f8f9fa;
+}
+
+.dropdown-menu button:last-child {
+  border-top: 1px solid #eee;
+  color: #e74c3c;
+}
+
 .main-content {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
+  padding: 20px;
   text-align: center;
 }
 
-.main-content h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+.footer {
+  background-color: #2c3e50;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  margin-top: auto;
 }
 
-.main-content p {
-  font-size: 1.2rem;
-  color: #666;
-}
-
-/* 响应式设计 */
 @media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    padding: 1rem;
+  .dropdown-menu {
+    right: -20px;
   }
 
-  .nav-links {
-    margin-top: 1rem;
+  .user-icon {
+    width: 35px;
+    height: 35px;
   }
 }

@@ -33,8 +33,8 @@ const ChangePassword = () => {
     setIsLoading(true);
 
     try {
-      const response = await api.put('/user/update-password', {
-        currentPassword: formData.currentPassword,
+      const response = await api.post('/user/withToken/modifyPassword', {
+        oldPassword: formData.currentPassword,
         newPassword: formData.newPassword
       });
 
