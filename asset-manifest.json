@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/AchillesGuo888.github.io/LIBRARY-SYSTEM-FRONTEND/static/css/main.bb708d43.css",
+    "main.js": "/AchillesGuo888.github.io/LIBRARY-SYSTEM-FRONTEND/static/js/main.81324c63.js",
+    "index.html": "/AchillesGuo888.github.io/LIBRARY-SYSTEM-FRONTEND/index.html",
+    "main.bb708d43.css.map": "/AchillesGuo888.github.io/LIBRARY-SYSTEM-FRONTEND/static/css/main.bb708d43.css.map",
+    "main.81324c63.js.map": "/AchillesGuo888.github.io/LIBRARY-SYSTEM-FRONTEND/static/js/main.81324c63.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.bb708d43.css",
+    "static/js/main.81324c63.js"
+  ]
+}
