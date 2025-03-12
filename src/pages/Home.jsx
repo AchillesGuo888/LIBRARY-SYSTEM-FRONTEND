@@ -10,13 +10,13 @@ function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 处理登出
+
   const handleLogout = useCallback(() => {
-    dispatch(logout()); // 调用 Redux 的 logout action
-    navigate('/'); // 导航到首页
+    dispatch(logout()); 
+    navigate('/'); 
   }, [dispatch, navigate]);
 
-  // 处理点击外部关闭下拉菜单
+  
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!e.target.closest('.user-menu')) {
@@ -28,13 +28,13 @@ function Home() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  // 处理查看个人资料
+  
   const handleProfile = () => {
     navigate('/edit-profile');
     setShowDropdown(false);
   };
 
-  // 处理修改密码
+  
   const handleChangePassword = () => {
     navigate('/change-password');
     setShowDropdown(false);
@@ -49,8 +49,7 @@ function Home() {
       <nav className="navbar">
         <div className="nav-links">
           <Link to="/">Home</Link>
-          <Link to="/books">Books</Link>
-          <Link to="/about">About</Link>
+
         </div>
         <div className="user-section">
           {isAuthenticated ? (

@@ -12,7 +12,7 @@ const EditProfile = () => {
         phone: '',
     });
     
-    // 从 Redux 获取状态
+
     const { token, userInfo } = useSelector((state) => state.auth);
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,7 +20,7 @@ const EditProfile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    // 获取用户信息
+
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -79,7 +79,7 @@ const EditProfile = () => {
             } else if (err.request) {
                 errorMessage = 'Unable to connect to server';
             }
-            setError(errorMessage); // 确保 errorMessage 被使用
+            setError(errorMessage); 
         } finally {
             setIsSubmitting(false);
         }

@@ -1,4 +1,4 @@
-// src/store/authSlice.js
+
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -13,7 +13,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // 登录相关
+
     loginStart: (state) => {
       state.loading = true;
       state.error = null;
@@ -29,7 +29,7 @@ const authSlice = createSlice({
       state.loading = false;
     },
 
-    // 注册相关
+
     registerStart: (state) => {
       state.loading = true;
       state.error = null;
@@ -45,7 +45,7 @@ const authSlice = createSlice({
       state.loading = false;
     },
 
-    // 通用
+
     logout: (state) => {
       state.token = null;
       state.userInfo = null;

@@ -9,7 +9,7 @@ import ChangePassword from './pages/ChangePassword';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/LIBRARY-SYSTEM-FRONTEND">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />

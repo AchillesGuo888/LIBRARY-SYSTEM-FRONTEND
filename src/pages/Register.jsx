@@ -22,14 +22,14 @@ function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 确保 userTypes 被使用
+
   const userTypes = [
     { value: '0', label: 'Student' },
     { value: '1', label: 'Teacher' },
     { value: '2', label: 'Librarian' }
   ];
 
-  // 确保 handleChange 被使用（需要绑定到输入框）
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -37,7 +37,7 @@ function Register() {
     });
   };
 
-  // 确保 handleSendCode 被使用（需要绑定到发送验证码按钮）
+
   const handleSendCode = async () => {
     if (!formData.email) {
       setError('Please enter your email address');
@@ -159,7 +159,7 @@ function Register() {
                 id="username"
                 name="username"
                 value={formData.username}
-                onChange={handleChange}  // 确保绑定
+                onChange={handleChange}  
                 disabled={isLoading}
                 required
               />
@@ -172,7 +172,7 @@ function Register() {
                 id="email"
                 name="email"
                 value={formData.email}
-                onChange={handleChange}  // 确保绑定
+                onChange={handleChange}  
                 disabled={isLoading}
                 required
               />
@@ -185,7 +185,7 @@ function Register() {
                 id="phone"
                 name="phone"
                 value={formData.phone}
-                onChange={handleChange}  // 确保绑定
+                onChange={handleChange}  
                 disabled={isLoading}
                 pattern="\d{11}"
                 placeholder="11 digit phone number"
@@ -201,7 +201,7 @@ function Register() {
                   id="code"
                   name="code"
                   value={formData.code}
-                  onChange={handleChange}  // 确保绑定
+                  onChange={handleChange}  
                   disabled={isLoading}
                   maxLength="6"
                   placeholder="6 digit code"
@@ -210,7 +210,7 @@ function Register() {
                 <button 
                   type="button" 
                   className="send-code-btn"
-                  onClick={handleSendCode}  // 确保绑定
+                  onClick={handleSendCode}  
                   disabled={isSendingCode || isLoading}
                 >
                   {isSendingCode ? 'Sending...' : 'Send Code'}
@@ -224,11 +224,11 @@ function Register() {
                 id="userType"
                 name="userType"
                 value={formData.userType}
-                onChange={handleChange}  // 确保绑定
+                onChange={handleChange}  
                 disabled={isLoading}
                 required
               >
-                {userTypes.map((type) => (  // 确保使用 userTypes
+                {userTypes.map((type) => (  
                   <option key={type.value} value={type.value}>
                     {type.label}
                   </option>
@@ -243,7 +243,7 @@ function Register() {
                 id="password"
                 name="password"
                 value={formData.password}
-                onChange={handleChange}  // 确保绑定
+                onChange={handleChange}  
                 disabled={isLoading}
                 required
               />
@@ -256,7 +256,7 @@ function Register() {
                 id="confirmPassword"
                 name="confirmPassword"
                 value={formData.confirmPassword}
-                onChange={handleChange}  // 确保绑定
+                onChange={handleChange}  
                 disabled={isLoading}
                 required
               />

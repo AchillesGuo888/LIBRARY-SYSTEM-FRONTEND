@@ -12,7 +12,7 @@ const ChangePassword = () => {
     confirmPassword: ''
   });
   
-  // 从 Redux 获取状态
+
   const { token } = useSelector((state) => state.auth);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +30,7 @@ const ChangePassword = () => {
     e.preventDefault();
     setError('');
     
-    // 前端验证
+
     if (formData.newPassword !== formData.confirmPassword) {
       setError('New password and confirmation do not match');
       return;
@@ -44,14 +44,14 @@ const ChangePassword = () => {
         newPassword: formData.newPassword
       }, {
         headers: {
-          Authorization: `Bearer ${token}` // 使用 Redux 中的 token
+          Authorization: `Bearer ${token}` 
         }
       });
 
       console.log('Password changed successfully:', response.data);
       alert('Password changed successfully, please login again');
       
-      // 使用 Redux action 登出
+
       dispatch(logout());
       navigate('/login');
 
@@ -61,7 +61,7 @@ const ChangePassword = () => {
       if (err.response) {
         errorMessage = err.response.data?.message || `Server error: ${err.response.status}`;
         if (err.response.status === 401) {
-          dispatch(logout()); // 使用 Redux action 处理未授权
+          dispatch(logout()); 
           navigate('/login');
         }
       } else if (err.request) {

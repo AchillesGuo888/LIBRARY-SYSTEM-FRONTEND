@@ -19,7 +19,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 修复 handleChange 未定义问题
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -69,7 +69,7 @@ const Login = () => {
             id="email"
             name="email"
             value={formData.email}
-            onChange={handleChange}  // 绑定 handleChange
+            onChange={handleChange}  
             disabled={loading}
             required
           />
@@ -82,7 +82,7 @@ const Login = () => {
             id="password"
             name="password"
             value={formData.password}
-            onChange={handleChange}  // 绑定 handleChange
+            onChange={handleChange}  
             disabled={loading}
             required
           />
