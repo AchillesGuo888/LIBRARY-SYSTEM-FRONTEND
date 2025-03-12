@@ -47,10 +47,16 @@
   font-size: 1rem;
   cursor: pointer;
   margin-top: 1rem;
+  transition: background-color 0.2s;
 }
 
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
   background-color: #2980b9;
+}
+
+.submit-btn:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
 }
 
 .links {
@@ -67,6 +73,16 @@
 
 .links a:hover {
   text-decoration: underline;
+}
+
+.error-message {
+  color: #e74c3c;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  text-align: center;
 }
 
 @media (max-width: 480px) {

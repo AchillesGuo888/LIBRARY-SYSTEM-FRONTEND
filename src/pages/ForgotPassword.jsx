@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import '../styles/ForgotPassword.css';
@@ -12,6 +12,7 @@ function ForgotPassword() {
   const [isLoading, setIsLoading] = useState(false);
   const [isCodeLoading, setIsCodeLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [countdown, setCountdown] = useState(0); 
   const navigate = useNavigate();
 
   // Handle sending verification code
@@ -22,6 +23,7 @@ function ForgotPassword() {
     try {
       await api.post('/user/withoutToken/getVerificationCode', { email }, { withCredentials: true });
       setSuccessMessage('Verification code has been sent to your email.');
+      setCountdown(60); 
     } catch (err) {
       let errorMessage = 'Failed to send verification code';
       if (err.response) {
@@ -35,6 +37,16 @@ function ForgotPassword() {
       setIsCodeLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (countdown <= 0) return;
+
+    const timer = setInterval(() => {
+      setCountdown(prev => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [countdown]);
 
   // Handle form submission (update password)
   const handleSubmit = async (e) => {
@@ -74,6 +86,12 @@ function ForgotPassword() {
     }
   };
 
+  const getCodeButtonText = () => {
+    if (isCodeLoading) return 'Sending...';
+    if (countdown > 0) return `${countdown}s Resend`;
+    return 'Get Code';
+  };
+
   return (
     <div className="forgot-password-container">
       <h2>Forgot Password</h2>
@@ -108,9 +126,9 @@ function ForgotPassword() {
               type="button"
               className="get-code-btn"
               onClick={handleGetCode}
-              disabled={isCodeLoading || !email}
+              disabled={isCodeLoading || countdown > 0 || !email}
             >
-              {isCodeLoading ? 'Sending...' : 'Get Verification Code'}
+              {getCodeButtonText()}
             </button>
           </div>
         </div>

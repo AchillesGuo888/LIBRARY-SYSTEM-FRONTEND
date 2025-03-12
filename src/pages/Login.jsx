@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import api from '../utils/api';
 import '../styles/Login.css';
+import { 
+  loginStart, 
+  loginSuccess, 
+  loginFailure 
+} from '../store/authSlice';
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+
+  const { loading, error } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // 修复 handleChange 未定义问题
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -21,34 +29,30 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setIsLoading(true);
+    dispatch(loginStart());
 
     try {
       const response = await api.post('/user/withoutToken/login', {
         email: formData.email,
         password: formData.password
       });
-
-      console.log('Login successful:', response.data);
-      localStorage.setItem('authToken', response.data.data.accessToken);
-      localStorage.setItem('userName', response.data.data.userName);
- 
+      
+      dispatch(loginSuccess({
+        token: response.data.data.accessToken,
+        userInfo: { username: response.data.data.userName }
+      }));
+      
       navigate('/');
-
     } catch (err) {
       let errorMessage = 'Login failed, please try again';
       
       if (err.response) {
         errorMessage = err.response.data?.message || `Server error: ${err.response.status}`;
       } else if (err.request) {
-        errorMessage = 'Unable to connect to server, please check your network connection';
+        errorMessage = 'Unable to connect to server';
       }
       
-      console.error('Login error:', err);
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
+      dispatch(loginFailure(errorMessage));
     }
   };
 
@@ -65,8 +69,8 @@ const Login = () => {
             id="email"
             name="email"
             value={formData.email}
-            onChange={handleChange}
-            disabled={isLoading}
+            onChange={handleChange}  // 绑定 handleChange
+            disabled={loading}
             required
           />
         </div>
@@ -78,8 +82,8 @@ const Login = () => {
             id="password"
             name="password"
             value={formData.password}
-            onChange={handleChange}
-            disabled={isLoading}
+            onChange={handleChange}  // 绑定 handleChange
+            disabled={loading}
             required
           />
         </div>
@@ -87,9 +91,9 @@ const Login = () => {
         <button 
           type="submit" 
           className="submit-btn"
-          disabled={isLoading}
+          disabled={loading}
         >
-          {isLoading ? 'Logging in...' : 'Login'}
+          {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
 

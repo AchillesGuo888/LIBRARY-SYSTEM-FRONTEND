@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import api from '../utils/api';
 import '../styles/Register.css';
+import { loginSuccess } from '../store/authSlice';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -11,20 +13,23 @@ function Register() {
     confirmPassword: '',
     phone: '',
     code: '',
-    userType: '0' // 默认选择学生
+    userType: '0'
   });
 
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isSendingCode, setIsSendingCode] = useState(false); // 发送验证码的状态
+  const [isSendingCode, setIsSendingCode] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // 确保 userTypes 被使用
   const userTypes = [
     { value: '0', label: 'Student' },
     { value: '1', label: 'Teacher' },
     { value: '2', label: 'Librarian' }
   ];
 
+  // 确保 handleChange 被使用（需要绑定到输入框）
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -32,7 +37,7 @@ function Register() {
     });
   };
 
-  // 发送验证码
+  // 确保 handleSendCode 被使用（需要绑定到发送验证码按钮）
   const handleSendCode = async () => {
     if (!formData.email) {
       setError('Please enter your email address');
@@ -61,19 +66,16 @@ function Register() {
   };
 
   const validateForm = () => {
-    // 密码验证
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return false;
     }
     
-    // 手机号验证（示例：简单验证11位数字）
     if (!/^\d{11}$/.test(formData.phone)) {
       setError('Invalid phone number (11 digits required)');
       return false;
     }
 
-    // 验证码验证（示例：6位数字）
     if (!/^\d{6}$/.test(formData.code)) {
       setError('Verification code must be 6 digits');
       return false;
@@ -100,7 +102,15 @@ function Register() {
         userType: parseInt(formData.userType)
       });
 
-      localStorage.setItem('authToken', response.data.token);
+      dispatch(loginSuccess({
+        token: response.data.token,
+        userInfo: {
+          username: formData.username,
+          email: formData.email,
+          userType: formData.userType
+        }
+      }));
+      
       navigate('/');
       
     } catch (err) {
@@ -112,7 +122,6 @@ function Register() {
         errorMessage = 'Unable to connect to server';
       }
       
-      console.error('Registration error:', err);
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -150,7 +159,7 @@ function Register() {
                 id="username"
                 name="username"
                 value={formData.username}
-                onChange={handleChange}
+                onChange={handleChange}  // 确保绑定
                 disabled={isLoading}
                 required
               />
@@ -163,7 +172,7 @@ function Register() {
                 id="email"
                 name="email"
                 value={formData.email}
-                onChange={handleChange}
+                onChange={handleChange}  // 确保绑定
                 disabled={isLoading}
                 required
               />
@@ -176,7 +185,7 @@ function Register() {
                 id="phone"
                 name="phone"
                 value={formData.phone}
-                onChange={handleChange}
+                onChange={handleChange}  // 确保绑定
                 disabled={isLoading}
                 pattern="\d{11}"
                 placeholder="11 digit phone number"
@@ -192,7 +201,7 @@ function Register() {
                   id="code"
                   name="code"
                   value={formData.code}
-                  onChange={handleChange}
+                  onChange={handleChange}  // 确保绑定
                   disabled={isLoading}
                   maxLength="6"
                   placeholder="6 digit code"
@@ -201,7 +210,7 @@ function Register() {
                 <button 
                   type="button" 
                   className="send-code-btn"
-                  onClick={handleSendCode}
+                  onClick={handleSendCode}  // 确保绑定
                   disabled={isSendingCode || isLoading}
                 >
                   {isSendingCode ? 'Sending...' : 'Send Code'}
@@ -215,11 +224,11 @@ function Register() {
                 id="userType"
                 name="userType"
                 value={formData.userType}
-                onChange={handleChange}
+                onChange={handleChange}  // 确保绑定
                 disabled={isLoading}
                 required
               >
-                {userTypes.map((type) => (
+                {userTypes.map((type) => (  // 确保使用 userTypes
                   <option key={type.value} value={type.value}>
                     {type.label}
                   </option>
@@ -234,7 +243,7 @@ function Register() {
                 id="password"
                 name="password"
                 value={formData.password}
-                onChange={handleChange}
+                onChange={handleChange}  // 确保绑定
                 disabled={isLoading}
                 required
               />
@@ -247,7 +256,7 @@ function Register() {
                 id="confirmPassword"
                 name="confirmPassword"
                 value={formData.confirmPassword}
-                onChange={handleChange}
+                onChange={handleChange}  // 确保绑定
                 disabled={isLoading}
                 required
               />

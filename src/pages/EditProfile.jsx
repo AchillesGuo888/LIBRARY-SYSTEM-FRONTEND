@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { useDispatch, useSelector } from 'react-redux';
 import api from '../utils/api';
 import '../styles/EditProfile.css';
+import { logout } from '../store/authSlice';
 
 const EditProfile = () => {
     const [formData, setFormData] = useState({
@@ -10,49 +11,42 @@ const EditProfile = () => {
         email: '',
         phone: '',
     });
+    
+    // 从 Redux 获取状态
+    const { token, userInfo } = useSelector((state) => state.auth);
     const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
-    const [username, setUsername] = useState('');
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     // 获取用户信息
     useEffect(() => {
-      const fetchUserData = async () => {
-          setIsLoading(true);
-          try {
-              const token = localStorage.getItem('authToken');
-              if (token) {
-                  const decoded = jwtDecode(token); // 使用 jwtDecode
-                  setUsername(decoded.username || 'User');
-              }
+        const fetchUserData = async () => {
+            try {
+                const response = await api.get('/user/withToken/queryUserInfo', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                
+                setFormData({
+                    userName: response.data.data.userName || '',
+                    email: response.data.data.email || '',
+                    phone: response.data.data.phone || '',
+                });
+            } catch (err) {
+                if (err.response?.status === 401) {
+                    dispatch(logout());
+                    navigate('/login');
+                }
+            }
+        };
 
-              const response = await api.get('/user/withToken/queryUserInfo', {
-                  headers: {
-                      Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-                  },
-              });
-              console.log('query user info:', response.data);
-              setFormData({
-                  userName: response.data.data.userName || '',
-                  email: response.data.data.email || '',
-                  phone: response.data.data.phone || '',
-              });
-          } catch (err) {
-              setError('Failed to load profile data');
-              console.log('Failed to load profile data:', err);
-              if (err.response?.status === 401) {
-                  localStorage.removeItem('authToken');
-                  navigate('/login');
-              }
-          } finally {
-              setIsLoading(false);
-          }
-      };
-
-      fetchUserData();
-  }, [navigate]);
+        if (token) {
+            fetchUserData();
+        }
+    }, [token, dispatch, navigate]);
 
     const handleChange = (e) => {
         setFormData({
@@ -69,7 +63,7 @@ const EditProfile = () => {
         try {
             await api.post('/user/withToken/modifyUserInfo', formData, {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
             alert('Profile updated successfully!');
@@ -79,21 +73,20 @@ const EditProfile = () => {
             if (err.response) {
                 errorMessage = err.response.data?.message || `Error: ${err.response.status}`;
                 if (err.response.status === 401) {
-                    localStorage.removeItem('authToken');
+                    dispatch(logout());
                     navigate('/login');
                 }
             } else if (err.request) {
                 errorMessage = 'Unable to connect to server';
             }
-            setError(errorMessage);
+            setError(errorMessage); // 确保 errorMessage 被使用
         } finally {
             setIsSubmitting(false);
         }
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('authToken');
-        setUsername('');
+        dispatch(logout());
         navigate('/');
     };
 
@@ -106,10 +99,6 @@ const EditProfile = () => {
         navigate('/change-password');
         setShowDropdown(false);
     };
-
-    if (isLoading) {
-        return <div className="home-container">Loading profile data...</div>;
-    }
 
     return (
         <div className="home-container">
@@ -129,7 +118,7 @@ const EditProfile = () => {
                             className="user-icon" 
                             onClick={() => setShowDropdown(!showDropdown)}
                         >
-                            {username.charAt(0).toUpperCase()}
+                            {userInfo?.username?.charAt(0).toUpperCase() || 'U'}
                         </div>
                         {showDropdown && (
                             <div className="dropdown-menu">

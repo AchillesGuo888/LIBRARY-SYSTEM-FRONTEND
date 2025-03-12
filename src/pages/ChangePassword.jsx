@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import api from '../utils/api';
 import '../styles/ChangePassword.css';
+import { logout } from '../store/authSlice';
 
 const ChangePassword = () => {
   const [formData, setFormData] = useState({
@@ -9,8 +11,12 @@ const ChangePassword = () => {
     newPassword: '',
     confirmPassword: ''
   });
+  
+  // 从 Redux 获取状态
+  const { token } = useSelector((state) => state.auth);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -24,7 +30,7 @@ const ChangePassword = () => {
     e.preventDefault();
     setError('');
     
-    // Front-end validation
+    // 前端验证
     if (formData.newPassword !== formData.confirmPassword) {
       setError('New password and confirmation do not match');
       return;
@@ -36,12 +42,17 @@ const ChangePassword = () => {
       const response = await api.post('/user/withToken/modifyPassword', {
         oldPassword: formData.currentPassword,
         newPassword: formData.newPassword
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}` // 使用 Redux 中的 token
+        }
       });
 
       console.log('Password changed successfully:', response.data);
       alert('Password changed successfully, please login again');
       
-      localStorage.removeItem('authToken');
+      // 使用 Redux action 登出
+      dispatch(logout());
       navigate('/login');
 
     } catch (err) {
@@ -49,11 +60,14 @@ const ChangePassword = () => {
       
       if (err.response) {
         errorMessage = err.response.data?.message || `Server error: ${err.response.status}`;
+        if (err.response.status === 401) {
+          dispatch(logout()); // 使用 Redux action 处理未授权
+          navigate('/login');
+        }
       } else if (err.request) {
-        errorMessage = 'Unable to connect to server, please check your network connection';
+        errorMessage = 'Unable to connect to server';
       }
       
-      console.error('Password change error:', err);
       setError(errorMessage);
     } finally {
       setIsLoading(false);

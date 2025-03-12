@@ -1,33 +1,23 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../store/authSlice';
 import '../styles/Home.css';
 
 function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [username, setUsername] = useState('');
+  const [showDropdown, setShowDropdown] = React.useState(false);
+  const { isAuthenticated, userInfo } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // 处理登出
   const handleLogout = useCallback(() => {
-    localStorage.removeItem('authToken'); // 清除缓存的 token
-    setIsLoggedIn(false); // 设置登录状态为 false
-    setUsername(''); // 清空用户名
+    dispatch(logout()); // 调用 Redux 的 logout action
     navigate('/'); // 导航到首页
-  }, [navigate]);
+  }, [dispatch, navigate]);
 
+  // 处理点击外部关闭下拉菜单
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setIsLoggedIn(true);
-        setUsername(decoded.username || 'User');
-      } catch (error) {
-        handleLogout(); // 如果 token 无效，执行注销操作
-      }
-    }
-
     const handleClickOutside = (e) => {
       if (!e.target.closest('.user-menu')) {
         setShowDropdown(false);
@@ -36,13 +26,15 @@ function Home() {
 
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
-  }, [handleLogout]);
+  }, []);
 
+  // 处理查看个人资料
   const handleProfile = () => {
     navigate('/edit-profile');
     setShowDropdown(false);
   };
 
+  // 处理修改密码
   const handleChangePassword = () => {
     navigate('/change-password');
     setShowDropdown(false);
@@ -61,13 +53,13 @@ function Home() {
           <Link to="/about">About</Link>
         </div>
         <div className="user-section">
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <div className="user-menu">
               <div 
                 className="user-icon" 
                 onClick={() => setShowDropdown(!showDropdown)}
               >
-                {username.charAt(0).toUpperCase()}
+                {userInfo?.username?.charAt(0).toUpperCase() || 'U'}
               </div>
               {showDropdown && (
                 <div className="dropdown-menu">
@@ -89,8 +81,8 @@ function Home() {
       <main className="main-content">
         <h2>Welcome to Library Management System</h2>
         <p>
-          {isLoggedIn 
-            ? `Welcome back, ${username}!`
+          {isAuthenticated
+            ? `Welcome back, ${userInfo?.username || 'User'}!`
             : 'Please login or register to access more features'}
         </p>
       </main>
