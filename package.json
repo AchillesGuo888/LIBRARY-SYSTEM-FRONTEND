@@ -1,5 +1,5 @@
 {
-  "homepage": "https:AchillesGuo888.github.io/LIBRARY-SYSTEM-FRONTEND",
+  "homepage": "https://AchillesGuo888.github.io/LIBRARY-SYSTEM-FRONTEND",
   "name": "library-system-frontend",
   "version": "0.1.0",
   "private": true,
@@ -27,7 +27,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -b gh-pages"
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
