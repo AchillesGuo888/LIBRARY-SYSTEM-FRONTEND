@@ -45,6 +45,7 @@ const EditProfile = () => {
 
         if (token) {
             fetchUserData();
+            console.log('aaaa'+token);
         }
     }, [token, dispatch, navigate]);
 
